@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1><a href="index.html" style="text-decoration:none; color:white;">Modern Shop</a></h1>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</header>
+
+<main id="checkout-container"></main>
+
+<script>
+const container = document.getElementById("checkout-container");
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+if (cart.length === 0) {
+  container.innerHTML = "<h2 style='padding:40px;'>Your cart is empty.</h2>";
+} else {
+  let total = 0;
+  cart.forEach(item => total += item.price);
+
+  container.innerHTML = `
+    <div class="checkout-card">
+      <h2>Order Summary</h2>
+      <p>Total: $${total.toFixed(2)}</p>
+      <button id="complete-order">Complete Order</button>
+    </div>
+  `;
+
+  document.getElementById("complete-order").onclick = function() {
+    localStorage.removeItem("cart");
+    alert("Order placed successfully!");
+    window.location.href = "index.html";
+  };
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    
+    <header>
+      <h1>Your Cart</h1>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart</a>
+      <a href="index.html">Home</a>
+    </header>
+
+    <main id="cart"></main>
+
+<script>
+const cartDiv = document.getElementById("cart");
+
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function removeItem(index) {
+  let cart = getCart();
+  cart.splice(index, 1);
+  saveCart(cart);
+  renderCart();
+}
+
+function renderCart() {
+  let cart = getCart();
+  cartDiv.innerHTML = "";
+
+  if (cart.length === 0) {
+    cartDiv.innerHTML = "<h2>Your cart is empty.</h2>";
+    return;
+  }
+
+  let total = 0;
+
+const checkoutBtn = document.createElement("button");
+checkoutBtn.textContent = "Proceed to Checkout";
+checkoutBtn.className = "checkout-btn";
+
+checkoutBtn.onclick = function() {
+  window.location.href = "checkout.html";
+};
+
+cartDiv.appendChild(checkoutBtn);
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+
+    div.innerHTML = `
+      <img src="${item.image}">
+      <div>
+        <h3>${item.name}</h3>
+        <p>Size: ${item.selectedSize || "N/A"}</p>
+        <p>$${item.price}</p>
+      </div>
+      <button onclick="removeItem(${index})">Remove</button>
+    `;
+
+    cartDiv.appendChild(div);
+  });
+
+  const totalDisplay = document.createElement("h2");
+  totalDisplay.style.marginTop = "30px";
+  totalDisplay.textContent = "Total: $" + total.toFixed(2);
+  cartDiv.appendChild(totalDisplay);
+}
+
+renderCart();
+    </script>
+
+  </body>
+</html>
